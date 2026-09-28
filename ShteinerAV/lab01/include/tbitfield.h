@@ -2,7 +2,9 @@
 #define __BITFIELD_H__
 
 #include <iostream>
+#include <string>
 #define BitSize 32
+#define BitShift 5
 
 using namespace std;
 
@@ -17,7 +19,6 @@ private:
 
   int   GetMemIndex(const int n) const; 
   TELEM GetMemMask (const int n) const; 
-  friend void PullForMax(TBitField& tmp1, TBitField& tmp2);
 public:
 
   TBitField(int len);                
