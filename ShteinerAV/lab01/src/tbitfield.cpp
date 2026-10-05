@@ -119,11 +119,19 @@ int TBitField::operator!=(const TBitField &tmp) const
 TBitField TBitField::operator|(const TBitField& tmp) const
 {
     int maxLen = (BitLen > tmp.BitLen) ? BitLen : tmp.BitLen;
+    int minLen = (BitLen < tmp.BitLen) ? BitLen : tmp.BitLen;
     TBitField res(maxLen);
-    for (int i = 0; i < maxLen; i++) {
-        int a = (i < BitLen) ? GetBit(i) : 0;
-        int b = (i < tmp.BitLen) ? tmp.GetBit(i) : 0;
-        if (a | b) res.SetBit(i);
+    for (int i = 0; i < minLen; i++) {
+        if (GetBit(i) | tmp.GetBit(i)) res.SetBit(i);
+    }
+    
+    for (int i = minLen; i < maxLen; i++) {
+        if (BitLen == minLen) {
+            if (tmp.GetBit(i)) res.SetBit(i);
+        }
+        else {
+            if (GetBit(i)) res.SetBit(i);
+        }
     }
     return res;
 }
@@ -131,11 +139,10 @@ TBitField TBitField::operator|(const TBitField& tmp) const
 TBitField TBitField::operator&(const TBitField& tmp) const
 {
     int maxLen = (BitLen > tmp.BitLen) ? BitLen : tmp.BitLen;
+    int minLen = (BitLen < tmp.BitLen) ? BitLen : tmp.BitLen;
     TBitField res(maxLen);
-    for (int i = 0; i < maxLen; i++) {
-        int a = (i < BitLen) ? GetBit(i) : 0;
-        int b = (i < tmp.BitLen) ? tmp.GetBit(i) : 0;
-        if (a & b) res.SetBit(i);
+    for (int i = 0; i < minLen; i++) {
+        if (GetBit(i) & tmp.GetBit(i)) res.SetBit(i);
     }
     return res;
 }
