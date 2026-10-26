@@ -155,7 +155,7 @@ TEST(TDynamicVector, can_add_vectors_with_equal_size)
  
 	EXPECT_EQ(v1+ v2, expected);            
 }
-TEST(TDynamicVector, can_subtract_vectors_with_equal_size)// to do
+TEST(TDynamicVector, can_subtract_vectors_with_equal_size)
 {
 	TDynamicVector<int> v1(4), v2(4);
 	v1[0] = 5; v1[1] = -2; v1[2] = 3; v1[3] = 0;
@@ -188,7 +188,7 @@ TEST(TDynamicVector, can_multiply_vectors_with_equal_size)
 	EXPECT_EQ(v1 * v2, 70);
 }
 
-TEST(TDynamicVector, cant_multiply_vectors_with_not_equal_size)// утечка памяти 
+TEST(TDynamicVector, cant_multiply_vectors_with_not_equal_size)
 {
 	TDynamicVector<int> v1(4), v2(5);
 	ASSERT_ANY_THROW(v1 * v2);
