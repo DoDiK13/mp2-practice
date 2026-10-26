@@ -31,11 +31,13 @@ TEST(TDynamicVector, copied_vector_is_equal_to_source_one)
 	ASSERT_EQ(v2, v1);
 }
 
-TEST(TDynamicVector, copied_vector_has_its_own_memory)
+TEST(TDynamicVector, copied_vector_has_its_own_memory) 
 {
 	TDynamicVector<int> v1(10);
 	TDynamicVector<int> v2(v1);
-	ASSERT_NE(&(v2[0]), &(v1[0]));
+	v1[0] = 1; v2[0] = 2;
+
+	ASSERT_NE(v1, v2);
 }
 
 TEST(TDynamicVector, can_get_size)
@@ -119,10 +121,8 @@ TEST(TDynamicVector, can_add_scalar_to_vector)
 	TDynamicVector<int> v1(4), v2(4);
 	v1[0] = 1; v1[1] = -2; v1[2] = 3; v1[3] = 0;
 	v2[0] = 2; v2[1] = -1; v2[2] = 4; v2[3] = 1;
-	TDynamicVector<int> res = v1 + 1;
 
-	EXPECT_EQ(res, v2);
-	EXPECT_EQ(res.size(), v2.size());
+	EXPECT_EQ(v1 + 1, v2);
 }
 
 TEST(TDynamicVector, can_subtract_scalar_from_vector)
@@ -130,10 +130,8 @@ TEST(TDynamicVector, can_subtract_scalar_from_vector)
 	TDynamicVector<int> v1(4), v2(4);
 	v1[0] = 1; v1[1] = -2; v1[2] = 3; v1[3] = 0;
 	v2[0] = 0; v2[1] = -3; v2[2] = 2; v2[3] = -1;
-	TDynamicVector<int> res = v1 - 1;
 
-	EXPECT_EQ(res, v2);
-	EXPECT_EQ(res.size(), v2.size());
+	EXPECT_EQ(v1 - 1, v2);
 }
 
 TEST(TDynamicVector, can_multiply_scalar_by_vector)
@@ -141,10 +139,8 @@ TEST(TDynamicVector, can_multiply_scalar_by_vector)
 	TDynamicVector<int> v1(4), v2(4);
 	v1[0] = 1; v1[1] = -2; v1[2] = 3; v1[3] = 0;
 	v2[0] = 2; v2[1] = -4; v2[2] = 6; v2[3] = 0;
-	TDynamicVector<int> res = v1 * 2;
 
-	EXPECT_EQ(res, v2);
-	EXPECT_EQ(res.size(), v2.size());
+	EXPECT_EQ(v1 * 2, v2);
 }
 
 
@@ -156,13 +152,10 @@ TEST(TDynamicVector, can_add_vectors_with_equal_size)
 
 	TDynamicVector<int> expected(4);
 	expected[0] = 5; expected[1] = 3; expected[2] = -3; expected[3] = 7;
-
-	TDynamicVector<int> res = v1 + v2;
-
-	EXPECT_EQ(res.size(), v1.size());  
-	EXPECT_EQ(res, expected);            
+ 
+	EXPECT_EQ(v1+ v2, expected);            
 }
-TEST(TDynamicVector, can_subtract_vectors_with_equal_size)
+TEST(TDynamicVector, can_subtract_vectors_with_equal_size)// to do
 {
 	TDynamicVector<int> v1(4), v2(4);
 	v1[0] = 5; v1[1] = -2; v1[2] = 3; v1[3] = 0;
@@ -171,10 +164,7 @@ TEST(TDynamicVector, can_subtract_vectors_with_equal_size)
 	TDynamicVector<int> expected(4);
 	expected[0] = 1; expected[1] = -7; expected[2] = 9; expected[3] = -7;
 
-	TDynamicVector<int> res = v1 - v2;
-
-	EXPECT_EQ(res.size(), v1.size());
-	EXPECT_EQ(res, expected);
+	EXPECT_EQ(v1 - v2, expected);
 }
 
 TEST(TDynamicVector, cant_subtract_vectors_with_not_equal_size)
@@ -194,12 +184,11 @@ TEST(TDynamicVector, can_multiply_vectors_with_equal_size)
 	TDynamicVector<int> v1(4), v2(4);
 	v1[0] = 1; v1[1] = 2; v1[2] = 3; v1[3] = 4;
 	v2[0] = 5; v2[1] = 6; v2[2] = 7; v2[3] = 8;
-
-	int res = v1 * v2;              
-	EXPECT_EQ(res, 70);
+            
+	EXPECT_EQ(v1 * v2, 70);
 }
 
-TEST(TDynamicVector, cant_multiply_vectors_with_not_equal_size)
+TEST(TDynamicVector, cant_multiply_vectors_with_not_equal_size)// утечка памяти 
 {
 	TDynamicVector<int> v1(4), v2(5);
 	ASSERT_ANY_THROW(v1 * v2);

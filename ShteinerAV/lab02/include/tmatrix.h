@@ -50,7 +50,7 @@ public:
   {
       delete[] pMem;
   }
-  TDynamicVector& operator=(const TDynamicVector& v)
+  TDynamicVector& operator=(const TDynamicVector& v) //todo
   {
       if (this == &v) return *this;
       if (sz != v.sz) {
@@ -122,11 +122,7 @@ public:
               break;
           }
       }
-
-      if (flag) {
-          return true;
-      }
-      return false;
+      return flag;
   }
   bool operator!=(const TDynamicVector& v) const noexcept
   {
@@ -143,7 +139,7 @@ public:
 
       return v1;
   }
-  TDynamicVector operator-(T val)
+  TDynamicVector operator-(T val) // v1+v2*(-1)
   {
       TDynamicVector v1(*this);
       for (int i = 0; i < sz; i++) {
@@ -172,7 +168,7 @@ public:
       }
       return res;
   }
-  TDynamicVector operator-(const TDynamicVector& v)
+  TDynamicVector operator-(const TDynamicVector& v) // v1+v2*(-1)
   {
       if (sz != v.sz) throw std::invalid_argument("Не совпадают размеры");
       TDynamicVector res(sz);
@@ -236,7 +232,7 @@ public:
   {
       if (sz != m.sz) return false;
       
-      for (size_t i = 0; i < sz; i++) {
+      for (size_t i = 0; i < sz; i++) { // todo compare vectors
           for (size_t j = 0; j < sz; j++) {
               if (pMem[i][j] != m.pMem[i][j]) {
                   return false;
@@ -289,7 +285,7 @@ public:
       if (sz != v.size()) throw std::invalid_argument("Не совпадают размеры");
       TDynamicVector<T> res(sz);
       for (size_t i = 0; i < sz; i++) {
-          for (size_t j = 0; j < sz; j++) {
+          for (size_t j = 0; j < sz; j++) { //todo
               res[i] += this->pMem[i][j] * v[j];
           }
       }
@@ -316,7 +312,7 @@ public:
       }
       return res;
   }
-  TDynamicMatrix operator*(const TDynamicMatrix& m)
+  TDynamicMatrix operator*(const TDynamicMatrix& m) //todo
   {
       if (sz != m.sz) throw std::invalid_argument("Не совпадают размеры");
       TDynamicMatrix res(sz);
