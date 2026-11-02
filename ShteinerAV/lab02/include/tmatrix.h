@@ -138,14 +138,15 @@ public:
 
       return v1;
   }
-  TDynamicVector operator-(T val) const // v1+v2*(-1) Не понял, как реализовать 
+  TDynamicVector operator-(T val) const // v1+v2*(-1)
   {
-      TDynamicVector v1(*this);
-      for (int i = 0; i < sz; i++) {
-          v1.pMem[i] -= val;
-      }
+      //TDynamicVector v1(*this);
+      //for (int i = 0; i < sz; i++) {
+      //    v1.pMem[i] -= val;
+      //}
 
-      return v1;
+      //return v1;
+      return (*this) + (val * (-1));
 
   }
   TDynamicVector operator*(T val) const
@@ -170,14 +171,14 @@ public:
   }
   TDynamicVector operator-(const TDynamicVector& v) const // v1+v2*(-1) 
   {
-      if (sz != v.sz) throw std::invalid_argument("Не совпадают размеры");
-      TDynamicVector res(sz);
-      for (int i = 0; i < sz; i++) {
-          res[i] = pMem[i] - v.pMem[i];
-      }
-      return res;
+      //if (sz != v.sz) throw std::invalid_argument("Не совпадают размеры");
+      //TDynamicVector res(sz);
+      //for (int i = 0; i < sz; i++) {
+      //    res[i] = pMem[i] - v.pMem[i];
+      //}
+      //return res;
 
-      //return (*this) + (v * T(-1)); с такой реализацией вылезает ошибка
+      return (*this) + (v * (-1));
   }
   T operator*(const TDynamicVector& v) const
   {
@@ -219,17 +220,6 @@ class TDynamicMatrix : private TDynamicVector<TDynamicVector<T>>
 public:
   using TDynamicVector<TDynamicVector<T>>::operator[];
   using TDynamicVector<TDynamicVector<T>>::size;
-
-  T& at(size_t i, size_t j)
-  {
-      if (ind >= sz || j >=sz || j < i) throw std::out_of_range("Выход за границы");
-      return pMem[i][j-i];
-  }
-  const T& at(size_t i, size_t j) const
-  {
-      if (ind >= sz || j >= sz || j < j < i) throw std::out_of_range("Выход за границы");
-      return pMem[i][j];
-  }
 
   explicit TDynamicMatrix(size_t s = 1) : TDynamicVector<TDynamicVector<T>>(s)
   {
@@ -345,7 +335,7 @@ public:
   }
   friend ostream& operator<<(ostream& ostr, const TDynamicMatrix& v)
   {
-      for (size_t i = 0; i < v.sz; i++) {
+      for (size_t i = 0; i < v.sz; i++) { //todo
           ostr << v[i] << std::endl;
       }
       return ostr;
