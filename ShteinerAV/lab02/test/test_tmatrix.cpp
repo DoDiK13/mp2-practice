@@ -200,7 +200,13 @@ TEST(TDynamicMatrix, can_multiply_matrix_by_vector)
 
     EXPECT_EQ((m * v),expected);
 }
+
 // throw vector.size != matrix.size
+TEST(TDynamicMatrix, cant_multiply_matrix_by_vector_no_equal_size) {
+    TDynamicMatrix<int> m(3);
+    TDynamicVector<int> v(2);
+    ASSERT_ANY_THROW(m * v);
+}
 
 TEST(TDynamicMatrix, can_multiply_matrices_with_equal_size)
 {
@@ -214,4 +220,11 @@ TEST(TDynamicMatrix, can_multiply_matrices_with_equal_size)
 
     EXPECT_EQ((m1 * m2), expected);
 }
+
 // throw matrix1.size != matrix2.size
+TEST(TDynamicMatrix, cant_multiply_matrices_with_no_equal_size)
+{
+    TDynamicMatrix<int> m1(2), m2(3);
+
+    ASSERT_ANY_THROW(m1 * m2);
+}
