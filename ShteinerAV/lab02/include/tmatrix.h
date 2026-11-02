@@ -220,6 +220,17 @@ public:
   using TDynamicVector<TDynamicVector<T>>::operator[];
   using TDynamicVector<TDynamicVector<T>>::size;
 
+  T& at(size_t i, size_t j)
+  {
+      if (ind >= sz || j >=sz || j < i) throw std::out_of_range("Выход за границы");
+      return pMem[i][j-i];
+  }
+  const T& at(size_t i, size_t j) const
+  {
+      if (ind >= sz || j >= sz || j < j < i) throw std::out_of_range("Выход за границы");
+      return pMem[i][j];
+  }
+
   explicit TDynamicMatrix(size_t s = 1) : TDynamicVector<TDynamicVector<T>>(s)
   {
       if (sz < 0 || sz > MAX_MATRIX_SIZE) throw std::out_of_range("Вышли за рамки");
