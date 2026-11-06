@@ -322,7 +322,7 @@ public:
   }
   friend ostream& operator<<(ostream& ostr, const TDynamicMatrix& v)
   {
-      for (size_t i = 0; i < v.sz; i++) { //todo
+      for (size_t i = 0; i < v.sz; i++) { // 
           for (size_t j = 0; j < i; j++) { ostr << "   "; }
           ostr << v[i] << std::endl;
       }
