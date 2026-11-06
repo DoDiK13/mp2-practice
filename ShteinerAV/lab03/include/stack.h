@@ -6,24 +6,24 @@
 const int MAX_SIZE = 100000000;
 
 template <typename T>
-class Stack {
+class TStack {
 private:
-	size_t maxSize;
+	size_t memSize;
 	int topInd;
 	T* pMem;
 public:
-	Stack(size_t size = 1) : maxSize(size) {
-		if (maxSize > MAX_SIZE) {
+	TStack(size_t size = 1) : memSize(size) {
+		if (memSize > MAX_SIZE || memSize <= 0) {
 			throw std::out_of_range("...");
 		}
 		topInd = -1;
-		pMem = new T[maxSize]();
+		pMem = new T[memSize]();
 	};
-	Stack(const Stack<T>& temp) : maxSize(temp.maxSize), topInd(temp.topInd) {
+	TStack(const TStack<T>& temp) : memSize(temp.memSize), topInd(temp.topInd) {
 
-		T* newMem = new T[maxSize]();
+		T* newMem = new T[memSize]();
 		try {
-			std::copy(temp.pMem, temp.pMem + maxSize, newMem);
+			std::copy(temp.pMem, temp.pMem + memSize, newMem);
 		}
 		catch (...) {
 			delete[] newMem;
@@ -32,24 +32,24 @@ public:
 
 		pMem = newMem;
 	};
-	Stack(Stack<T>&& temp) : maxSize(temp.maxSize), topInd(temp.topInd), pMem(temp.pMem) {
-		temp.maxSize = 0;
+	TStack(TStack<T>&& temp) : memSize(temp.memSize), topInd(temp.topInd), pMem(temp.pMem) {
+		temp.memSize = 0;
 		temp.topInd = -1;
 		temp.pMem = nullptr;
 	}
-	~Stack() {
+	~TStack() {
 		delete[] pMem;
 	}
 
-	const Stack<T>& operator = (const Stack<T>& temp) {
+	const TStack<T>& operator = (const TStack<T>& temp) {
 		if (this == &temp) { return *this; }
-		if (maxSize != temp.maxSize) {
-			maxSize = temp.maxSize;
+		if (memSize != temp.memSize) {
+			memSize = temp.memSize;
 		}
 
-		T* newMem = new T[maxSize]();
+		T* newMem = new T[memSize]();
 		try {
-			std::copy(temp.pMem, temp.pMem + maxSize, newMem);
+			std::copy(temp.pMem, temp.pMem + memSize, newMem);
 		}
 		catch (...) {
 			delete[] newMem;
@@ -63,10 +63,11 @@ public:
 		return *this;
 	}
 
+	size_t size() { return topInd + 1; }
 	bool isEmpty() const { return topInd == -1; }
-	bool isFull() const { return topInd == maxSize - 1; }
+	bool isFull() const { return topInd == memSize - 1; }
 	T Top() { 
-		if (isEmpty()) { throw("Стек пуст"); }
+		if (isEmpty()) { throw std::out_of_range("..."); }
 		return pMem[topInd];
 	}
 	void push(const T& elem) {
