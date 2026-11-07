@@ -3,6 +3,7 @@
 #include "string"
 #include <iostream>
 #include <limits>
+#include <sstream>
 
 int TPostfixExpression :: GetPriority(char op) const {
 	switch (op) {
@@ -37,9 +38,8 @@ TPostfixExpression::TPostfixExpression(const std::string& expr) : infixExpr(expr
 				TStack1.push(TStack2.Top());
 				TStack2.pop();
 			}
-			if (!TStack2.isEmpty()) {
-				TStack2.pop();
-			}
+			TStack2.pop();
+
 		}
 		else if (c == '+' || c == '-' || c == '*' || c == '/') {
 			while (!TStack2.isEmpty() && TStack2.Top() != '(' && GetPriority(TStack2.Top()) >= GetPriority(c)) {
@@ -49,7 +49,7 @@ TPostfixExpression::TPostfixExpression(const std::string& expr) : infixExpr(expr
 			TStack2.push(c);
 		}
 		else {
-			throw std::runtime_error(std::string("Ошибка: недопустимый символ '") + c + "'");
+			throw std::runtime_error("Ошибка: недопустимый символ");
 		}
 	}
 
@@ -68,6 +68,19 @@ TPostfixExpression::TPostfixExpression(const std::string& expr) : infixExpr(expr
 	}
 }
 
+double ReadValue(const char name) {
+	while (true) {
+		std::cout << "Введите значение для операнда " << name << ": ";
+		std::string line;
+		std::getline(std::cin, line);
+		std::istringstream iss(line);
+		double val; char extra;
+		if ((iss >> val) && !(iss >> extra))
+			return val;
+		std::cout << "\nОшибка! Введите корректное значение.\n";
+	}
+}
+
 void TPostfixExpression::SetOperandValue(std::vector<std::pair<char, double>>& operands) const {
 	for (char c : postfixExpr) {
 		if (c >= 'A' && c <= 'Z') {
@@ -77,13 +90,7 @@ void TPostfixExpression::SetOperandValue(std::vector<std::pair<char, double>>& o
 			}
 			if (flag_duplicate) { continue; }
 
-			double val;
-			std::cout << "Введите значение для операнда " << c << ": ";
-			while (!(std::cin >> val)) {
-				std::cout << "Ошибка! Введите число: ";
-				std::cin.clear();
-				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-			}
+			double val = ReadValue(c);
 			operands.push_back({ c, val });
 		}
 	}

@@ -8,7 +8,7 @@ int main() {
     try {
         std::cout << "Введите выражение: ";
         std::string input;
-        std::getline(std::cin >> std::ws, input);
+        std::getline(std::cin, input);
 
         TPostfixExpression expr(input);
 
@@ -17,7 +17,7 @@ int main() {
 
         double result = expr.Calculate(my_operands);
 
-        std::cout << "Постфиксная форма: " << expr.GetPostfix() << "\n";
+        std::cout << "\nПостфиксная форма: " << expr.GetPostfix() << "\n";
         std::cout << "Результат: " << result << "\n";
     }
     catch (const std::exception& e) {

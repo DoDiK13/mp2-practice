@@ -10,7 +10,7 @@ private:
     std::string postfixExpr;
 
     int GetPriority(char op) const;
-
+    friend double ReadValue(const char name);
 public:
     TPostfixExpression(const std::string& expr);
     std::string GetPostfix() const { return postfixExpr; }
