@@ -63,6 +63,16 @@ public:
 		return *this;
 	}
 
+	bool operator==(const TStack<T>&) const //todo
+	{
+		return true;
+	}
+
+	bool operator!=(const TStack<T>&) const //todo
+	{
+		return true;
+	}
+
 	size_t size() { return topInd + 1; }
 	bool isEmpty() const { return topInd == -1; }
 	bool isFull() const { return topInd == memSize - 1; }

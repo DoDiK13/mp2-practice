@@ -68,7 +68,7 @@ TPostfixExpression::TPostfixExpression(const std::string& expr) : infixExpr(expr
 	}
 }
 
-double ReadValue(const char name) {
+double TPostfixExpression::ReadValue(const char name) const {
 	while (true) {
 		std::cout << "Введите значение для операнда " << name << ": ";
 		std::string line;
