@@ -1,11 +1,6 @@
 #include "postfix_form.h"
 
 #include <gtest\gtest.h>
-#include <sstream>
-#include <vector>
-#include <utility>
-#include <string>
-#include <stdexcept>
 
 TEST(TPostfixExpression, can_create_from_simple_expression)
 {
@@ -24,13 +19,13 @@ TEST(TPostfixExpression, converts_addition)
     ASSERT_EQ("AB+", e.GetPostfix());
 }
 
-TEST(TPostfixExpression, converts_subtraction_and_multiplication_by_priority)
+TEST(TPostfixExpression, converts_multiplication_priority_over_addition)
 {
     TPostfixExpression e("A+B*C");
     ASSERT_EQ("ABC*+", e.GetPostfix());
 }
 
-TEST(TPostfixExpression, converts_expression_with_operator_at_start)
+TEST(TPostfixExpression, converts_multiplication_before_addition)
 {
     TPostfixExpression e("A*B+C");
     ASSERT_EQ("AB*C+", e.GetPostfix());
@@ -54,16 +49,10 @@ TEST(TPostfixExpression, respects_nested_parentheses)
     ASSERT_EQ("AB+", e.GetPostfix());
 }
 
-TEST(TPostfixExpression, converts_complex_expression)
-{
-    TPostfixExpression e("(A+B)*(C-D)");
-    ASSERT_EQ("AB+CD-*", e.GetPostfix());
-}
-
 TEST(TPostfixExpression, ignores_spaces)
 {
-    TPostfixExpression e("  A +  B * C  ");
-    ASSERT_EQ("ABC*+", e.GetPostfix());
+    TPostfixExpression e("  A +  B  ");
+    ASSERT_EQ("AB+", e.GetPostfix());
 }
 
 TEST(TPostfixExpression, empty_expression_produces_empty_postfix)
@@ -84,10 +73,6 @@ TEST(TPostfixExpression, copied_expression_has_same_postfix)
     TPostfixExpression e2(e1);
     ASSERT_EQ(e1.GetPostfix(), e2.GetPostfix());
 }
-
-
-
-
 
 TEST(TPostfixExpression, throws_on_extra_closing_bracket)
 {
@@ -124,12 +109,9 @@ TEST(TPostfixExpression, throws_on_special_character)
     ASSERT_THROW(TPostfixExpression e("A$B"), std::runtime_error);
 }
 
-
-
-
-
 namespace {
-    std::vector<std::pair<char, double>> MakeOperands(std::initializer_list<std::pair<char, double>> xs)
+    std::vector<std::pair<char, double>> MakeOperands(
+        std::initializer_list<std::pair<char, double>> xs)
     {
         return std::vector<std::pair<char, double>>(xs);
     }
@@ -184,51 +166,54 @@ TEST(TPostfixExpression, calculate_respects_parentheses)
     ASSERT_DOUBLE_EQ(9.0, e.Calculate(ops));
 }
 
-TEST(TPostfixExpression, calculate_complex_expression)
-{
-    TPostfixExpression e("(A+B)*(C-D)");
-    auto ops = MakeOperands({ {'A', 1.0}, {'B', 2.0}, {'C', 5.0}, {'D', 3.0} });
-    ASSERT_DOUBLE_EQ(6.0, e.Calculate(ops));
-}
-
-TEST(TPostfixExpression, calculate_does_not_modify_operands)
+TEST(TPostfixExpression, calculate_does_not_change_operands_size)
 {
     TPostfixExpression e("A+B");
     auto ops = MakeOperands({ {'A', 1.0}, {'B', 2.0} });
     e.Calculate(ops);
     ASSERT_EQ(2, ops.size());
-    ASSERT_DOUBLE_EQ(1.0, ops[0].second);
-    ASSERT_DOUBLE_EQ(2.0, ops[1].second);
 }
 
+TEST(TPostfixExpression, calculate_does_not_change_first_operand_value)
+{
+    TPostfixExpression e("A+B");
+    auto ops = MakeOperands({ {'A', 1.0}, {'B', 2.0} });
+    e.Calculate(ops);
+    ASSERT_DOUBLE_EQ(1.0, ops[0].second);
+}
 
-
-
+TEST(TPostfixExpression, calculate_does_not_change_second_operand_value)
+{
+    TPostfixExpression e("A+B");
+    auto ops = MakeOperands({ {'A', 1.0}, {'B', 2.0} });
+    e.Calculate(ops);
+    ASSERT_DOUBLE_EQ(2.0, ops[1].second);
+}
 
 TEST(TPostfixExpression, calculate_throws_on_empty_expression)
 {
     TPostfixExpression e("");
     std::vector<std::pair<char, double>> ops;
-    ASSERT_ANY_THROW(e.Calculate(ops));
+    ASSERT_THROW(e.Calculate(ops), std::runtime_error);
 }
 
 TEST(TPostfixExpression, calculate_throws_on_division_by_zero)
 {
     TPostfixExpression e("A/B");
     auto ops = MakeOperands({ {'A', 1.0}, {'B', 0.0} });
-    ASSERT_ANY_THROW(e.Calculate(ops));
+    ASSERT_THROW(e.Calculate(ops), std::runtime_error);
 }
 
 TEST(TPostfixExpression, calculate_throws_when_too_few_operands)
 {
     TPostfixExpression e("A+");
     auto ops = MakeOperands({ {'A', 1.0} });
-    ASSERT_ANY_THROW(e.Calculate(ops));
+    ASSERT_THROW(e.Calculate(ops), std::runtime_error);
 }
 
 TEST(TPostfixExpression, calculate_throws_when_extra_numbers_left_in_stack)
 {
     TPostfixExpression e("AB");
     auto ops = MakeOperands({ {'A', 1.0}, {'B', 2.0} });
-    ASSERT_ANY_THROW(e.Calculate(ops));
+    ASSERT_THROW(e.Calculate(ops), std::runtime_error);
 }

@@ -63,17 +63,21 @@ public:
 		return *this;
 	}
 
-	bool operator==(const TStack<T>&) const //todo
-	{
+	bool operator==(const TStack<T>& tmp) const 
+	{	
+		if (memSize != tmp.memSize || this->size() != tmp.size()) return false;
+		for (size_t i = 0; i < this->size(); i++) {
+			if (pMem[i] != tmp.pMem[i]) return false;
+		}
 		return true;
 	}
 
-	bool operator!=(const TStack<T>&) const //todo
+	bool operator!=(const TStack<T>&tmp) const
 	{
-		return true;
+		return !((*this) == tmp);
 	}
 
-	size_t size() { return topInd + 1; }
+	size_t size() const { return topInd + 1; }
 	bool isEmpty() const { return topInd == -1; }
 	bool isFull() const { return topInd == memSize - 1; }
 	T Top() { 
